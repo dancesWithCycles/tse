@@ -26,7 +26,7 @@
 
     <Loggers>
         # Override log level for specified package
-        <Logger name="de.vbn" level="all">
+        <Logger name="de.swingbe" level="all">
             <appender-ref ref="rollingFile" level="all"/>
         </Logger>
         <Root level="all" additivity="false">
