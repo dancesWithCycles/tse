@@ -1,4 +1,9 @@
 # tse
 time sheet evaluation via Java CLI app
 
-[[_TOC_]]
+##### Table of Contents  
+[Headers](#headers)  
+[Emphasis](#emphasis)  
+...snip...    
+<a name="headers"/>
+## Headers
