@@ -74,7 +74,6 @@ public class TimeSheetParser {
                 LOG.debug("countEntry: " + countEntry);
                 LOG.debug("countEntryComplete: " + countEntryComplete);
                 LOG.debug("countEntryCompleteNot: " + countEntryCompleteNot);
-                LOG.debug("latest entry: " + timeSheet.get(timeSheet.size() - 1));
 
                 br.close();
 

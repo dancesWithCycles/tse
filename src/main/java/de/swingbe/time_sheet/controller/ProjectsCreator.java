@@ -1,8 +1,7 @@
 package de.swingbe.time_sheet.controller;
 
-import de.swingbe.time_sheet.Main;
 import de.swingbe.time_sheet.model.Project;
-import de.swingbe.time_sheet.model.ProjectList;
+import de.swingbe.time_sheet.model.Projects;
 import de.swingbe.time_sheet.model.TimeSheet;
 import de.swingbe.time_sheet.model.TimeSheetEntry;
 import org.slf4j.Logger;
@@ -15,14 +14,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProjectListCreator {
+public class ProjectsCreator {
 
-    public final static Logger LOG = LoggerFactory.getLogger(Main.class);
+    public final static Logger LOG = LoggerFactory.getLogger(ProjectsCreator.class);
 
-    public static ProjectList create(TimeSheet timeSheet) {
-        ProjectList projectList = null;
-        Map<String, Project> projectMap = new HashMap<>();
+    public static Projects create(TimeSheet timeSheet) {
+        Projects projects = new Projects();
+
         for (TimeSheetEntry entry : timeSheet.getTimeSheet()) {
+
             //get name
             String name = entry.getProject();
 
@@ -39,7 +39,7 @@ public class ProjectListCreator {
                         + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
-            LOG.debug("day: " + day);
+            //todo cleanup LOG.debug("day: " + day);
 
             //get start time
             //Instantiating the SimpleDateFormat class
@@ -54,9 +54,9 @@ public class ProjectListCreator {
                         + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
-            LOG.debug("startTime: " + startTime);
+            //todo cleanup LOG.debug("startTime: " + startTime);
 
-            //get start time
+            //get end time
             //Instantiating the SimpleDateFormat class
             SimpleDateFormat sdfEndTime = new SimpleDateFormat("dd.MM.yyyyHH:mm");
             //Parsing the given String to Date object
@@ -69,21 +69,37 @@ public class ProjectListCreator {
                         + Arrays.toString(e.getStackTrace()));
                 e.printStackTrace();
             }
-            LOG.debug("endTime: " + endTime);
+            //todo cleanup LOG.debug("endTime: " + endTime);
 
             //compute difference between start and end time
             long diff = endTime.getTime() - startTime.getTime();
-            LOG.debug("diff: " + diff);
-            double diffMinutes = diff / (1000 * 60);
-            LOG.debug("diffMinutes: " + diffMinutes);
-            double diffHours = diff / (1000 * 60 * 60);
-            LOG.debug("diffHours: " + diffHours);
+            double diffHours = (double) diff / (1000 * 60 * 60);
+            //todo cleanup LOG.debug("diffHours: " + diffHours);
 
-            Project project = projectMap.get(name);
+            //update project with time sheet entry
+            //find existing project
+            Project project = projects.get(name);
             if (project == null) {
-                //TODO projectMap.put(name,new Project(name,new Date(),new Date(), 1.5));
+                //create new project
+                project = new Project(name);
             }
+
+            //update start time
+            if (project.getStart().compareTo(startTime) > 0) {
+                project.setStart(startTime);
+            }
+
+            //update end time
+            if (project.getEnd().compareTo(endTime) < 0) {
+                project.setEnd(endTime);
+            }
+
+            //update hours
+            project.setHours(project.getHours() + diffHours);
+
+            //update projects
+            projects.put(project);
         }
-        return projectList;
+        return projects;
     }
 }
